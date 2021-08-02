@@ -1,9 +1,8 @@
 from random import *
 
 # 중복회피
-number_list = [] 
-for i in range(10):
-    number_list.append(i)
+number_list = [i for i in range(10)] 
+
 while True: # 첫자리 숫자가 0되는 것을 제외
     shuffle(number_list)
     if number_list[0] != 0:

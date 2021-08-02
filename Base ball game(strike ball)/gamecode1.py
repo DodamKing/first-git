@@ -1,6 +1,6 @@
 from random import *
 
-answer = str(randint(1, 999))
+answer = str(randint(100, 999))
 
 print(answer)
 
