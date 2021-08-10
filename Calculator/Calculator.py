@@ -9,8 +9,8 @@ from tkinter import *
 win = Tk()
 
 # 변수
-temp = ''
-output = StringVar()
+temp = '' # 임시저장 변수
+output = StringVar() # 출력text
 
 ## 함수
 # 버튼 클릭
@@ -29,7 +29,7 @@ def Clear():
     output.set('0')
     temp=''
 
-# = 버튼
+# '=' 버튼
 def equal():
   global temp
   temp = input_box.get()
@@ -37,9 +37,33 @@ def equal():
   input_box.insert(0, eval(temp))
   temp=''  
 
+# CE 버튼
+def CE():
+  global temp
+  temp = input_box.get()
+  output.set(temp[:-1])
 
-
-
+### 키 입력 함수 작성중 ----------------- 아직 바인딩 안함
+# # 키 입력
+# def key_input(factor):
+#   numbers = '1234567890'
+#   operators = '/*+-'
+#   # , btn_click()함수 호출.
+#   if factor.char in numbers :
+#       btn_click(factor.char)
+#       print(factor.char)
+#   # 연산자 입력시, math_button_pressed() 함수 호출. 
+#   elif value.char in operators :
+#       math_button_pressed(value.char)
+#       print(value.char)
+#   # 엔터키 -> =버튼 
+#   elif value.keysym == "Return":
+#       equal_button_pressed()
+#       print("equal button pressed")
+#   # ESC 키 -> AC 버튼 입력.
+#   elif value.keysym == "Escape":
+#       button_pressed('AC')
+#       print('AC button pressed')
     
 
 
@@ -56,7 +80,7 @@ output_box = Label(win, justify='right', font=(None, 16, 'bold'), textvariable=o
 output_box.grid(column=4, row=0, columnspan=4)
 
 # 버튼 생성
-btn1 = Button(win, text='CE', width=4, height=1, font=(None, 14, 'bold'), command='###')
+btn1 = Button(win, text='CE', width=4, height=1, font=(None, 14, 'bold'), command=CE)
 btn1.grid(column=0, row=1)
 
 btn2 = Button(win, text='C',width=4, height=1, font=(None, 14, 'bold'), command=Clear)
@@ -110,7 +134,7 @@ bnt8.grid(column=0, row=5)
 number_0 = Button(win, text='0',width=4, height=1, font=(None, 14, 'bold'), command=lambda: btn_click(0))
 number_0.grid(column=1, row=5)
 
-bnt9 = Button(win, text='.',width=4, height=1, font=(None, 14, 'bold'), command='###')
+bnt9 = Button(win, text='.',width=4, height=1, font=(None, 14, 'bold'), command=lambda: btn_click('.'))
 bnt9.grid(column=2, row=5)
 
 bnt_equal = Button(win, text='=',width=4, height=1, font=(None, 14, 'bold'), command=equal)
