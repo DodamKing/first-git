@@ -11,60 +11,84 @@ win = Tk()
 # 변수
 temp = '' # 임시저장 변수
 output = StringVar() # 출력text
+save_list = []
 
 ## 함수
-# 버튼 클릭
+# 버튼 클릭 함수
 def btn_click(factor):
   global temp
+  global save_list
+  save_list.append(input_box.get())
   if input_box.get() == '0':
     output.set(str(factor))
   else:
     temp = input_box.get()
-    # input_box.delete(0, END)
-    # input_box.insert(0, str(temp) + str(factor))
     output.set(str(temp) + str(factor))
     
-# 클리어
+# 클리어 함수
 def Clear():
     output.set('0')
     temp=''
+    save_list = []
 
-# '=' 버튼
+# '=' 버튼 함수
 def equal():
   global temp
+  global save_list
+  save_list.append(input_box.get())
   temp = input_box.get()
-  input_box.delete(0, END)
-  input_box.insert(0, eval(temp))
-  temp=''  
+  answer = str(eval(temp))
+  if answer[-2:] == '.0':  # 소수점 없애기 위한 새로운 방법
+    answer = answer.replace('.0', '')
+  # fillter(answer)
+  output.set(answer)
+  temp='' 
 
-# CE 버튼
+# CE 버튼 함수
 def CE():
   global temp
+  global save_list
+  save_list.append(input_box.get())
   temp = input_box.get()
   output.set(temp[:-1])
 
-### 키 입력 함수 작성중 ----------------- 아직 바인딩 안함
-# # 키 입력
-# def key_input(factor):
-#   numbers = '1234567890'
-#   operators = '/*+-'
-#   # , btn_click()함수 호출.
-#   if factor.char in numbers :
-#       btn_click(factor.char)
-#       print(factor.char)
-#   # 연산자 입력시, math_button_pressed() 함수 호출. 
-#   elif value.char in operators :
-#       math_button_pressed(value.char)
-#       print(value.char)
-#   # 엔터키 -> =버튼 
-#   elif value.keysym == "Return":
-#       equal_button_pressed()
-#       print("equal button pressed")
-#   # ESC 키 -> AC 버튼 입력.
-#   elif value.keysym == "Escape":
-#       button_pressed('AC')
-#       print('AC button pressed')
+## 키 입력 함수
+def key_input(factor):
+  keys = '1234567890/*+-'
+  # 키 입력시, btn_click()함수 호출.
+  if factor.char in keys :
+      btn_click(factor.char)
+  # 엔터키 -> =버튼 
+  elif factor.keysym == "Return":
+      equal()
+  # ESC 키 -> AC 버튼 입력.
+  elif factor.keysym == "Escape":
+      Clear()
     
+# 부호 변환 함수 
+def switching():
+  global temp
+  global save_list
+  save_list.append(input_box.get())
+  temp = input_box.get()
+  answer = str(-float(temp))
+  if answer[-2:] == '.0':
+    answer = answer.replace('.0', '')
+  output.set(answer)
+
+# 되돌리기 함수(백스페이스)
+def back():
+  if save_list != []:
+    back = save_list.pop()
+    output.set(back)
+
+# 부동소수 필터 함수 --------------- 계속 오류 남
+# def fillter():
+#   global answer
+#   if int(answer) == float(answer):
+#     answer = int(answer)
+#   else:
+#     answer = float(answer)
 
 
 # 창 기본 설정
@@ -86,7 +110,7 @@ btn1.grid(column=0, row=1)
 btn2 = Button(win, text='C',width=4, height=1, font=(None, 14, 'bold'), command=Clear)
 btn2.grid(column=1, row=1)
 
-btn3 = Button(win, text='<-',width=4, height=1, font=(None, 14, 'bold'), command='###')
+btn3 = Button(win, text='undo',width=4, height=1, font=(None, 14, 'bold'), command=back)
 btn3.grid(column=2, row=1)
 
 btn4 = Button(win, text='/',width=4, height=1, font=(None, 14, 'bold'), command=lambda: btn_click('/'))
@@ -128,7 +152,7 @@ number_3.grid(column=2, row=4)
 bnt7 = Button(win, text='+',width=4, height=1, font=(None, 14, 'bold'), command=lambda: btn_click('+'))
 bnt7.grid(column=3, row=4)
 
-bnt8 = Button(win, text='+/-',width=4, height=1, font=(None, 14, 'bold'), command='###')
+bnt8 = Button(win, text='+/-',width=4, height=1, font=(None, 14, 'bold'), command=switching)
 bnt8.grid(column=0, row=5)
 
 number_0 = Button(win, text='0',width=4, height=1, font=(None, 14, 'bold'), command=lambda: btn_click(0))
@@ -140,7 +164,8 @@ bnt9.grid(column=2, row=5)
 bnt_equal = Button(win, text='=',width=4, height=1, font=(None, 14, 'bold'), command=equal)
 bnt_equal.grid(column=3, row=5)
 
-
+# 키 바인딩
+win.bind('<Key>', key_input) # (이벤트 값, 함수) 키 이벤트가 발생하면 key_input 함수에 연결해라
 
 win.mainloop()
 
